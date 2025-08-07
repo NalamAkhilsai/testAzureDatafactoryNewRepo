@@ -1,0 +1,151 @@
+{
+	"name": "PL_Blob_To_SSMS",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter Files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter Files').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy Files From Blob To SSMS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_blobstorage",
+									"type": "DatasetReference",
+									"parameters": {
+										"sourcefiles": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_azure_sql",
+									"type": "DatasetReference",
+									"parameters": {
+										"SchemaName": "dbo",
+										"TableName": {
+											"value": "@replace(item().name,'.csv',',')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Filter Files",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata Files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata Files').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@endswith(item().name,'.csv')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Metadata Files",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_blob",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-08-01T18:06:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

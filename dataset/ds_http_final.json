@@ -1,0 +1,40 @@
+{
+	"name": "ds_http_final",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_http_final",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"BaseURL": {
+					"value": "@dataset().BaseURL",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"BaseURL": {
+				"type": "string"
+			},
+			"relativeURL": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().relativeURL",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

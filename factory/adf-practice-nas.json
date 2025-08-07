@@ -1,0 +1,9 @@
+{
+	"name": "adf-practice-nas",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "efa49078-6faa-4853-8e61-8ca23a1dfe37",
+		"tenantId": "551bcaed-a6f0-4343-8dd2-827fa6430db1"
+	}
+}

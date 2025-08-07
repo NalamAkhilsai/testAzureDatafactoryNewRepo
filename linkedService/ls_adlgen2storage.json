@@ -1,0 +1,12 @@
+{
+	"name": "ls_adlgen2storage",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlgen2storagepractice.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDhBRjE2QjM4LUQyNDQtNDJDMy05MDU4LThFMThFRUI1RjFDRV9kNzFiODc0NS04MjJmLTRiOGItYWYzYi0yMDdjMWU3Y2E2Y2UiDQp9"
+		}
+	}
+}

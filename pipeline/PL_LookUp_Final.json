@@ -1,0 +1,135 @@
+{
+	"name": "PL_LookUp_Final",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_Final",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_blob_lookup_final",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachRecord",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Final').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data http to adlgen2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_http_lookup_final",
+									"type": "DatasetReference",
+									"parameters": {
+										"sourceBaseURL": {
+											"value": "@item().sourceBaseUrl",
+											"type": "Expression"
+										},
+										"sourceRelativeURL": {
+											"value": "@item().sourceRelativeUrl",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_gen2_lookup_final",
+									"type": "DatasetReference",
+									"parameters": {
+										"sinkFilename": {
+											"value": "@item().sinkFileName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-07-31T07:41:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
