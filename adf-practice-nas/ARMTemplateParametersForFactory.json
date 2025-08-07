@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-practice-nas"
+		},
+		"ls_adlgen2storage_accountKey": {
+			"value": ""
+		},
+		"ls_azure_sql_password": {
+			"value": ""
+		},
+		"ls_blobstorage_connectionString": {
+			"value": ""
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
+		},
+		"ls_adlgen2storage_properties_typeProperties_url": {
+			"value": "https://adlgen2storagepractice.dfs.core.windows.net/"
+		},
+		"ls_azure_sql_properties_typeProperties_server": {
+			"value": "testdatabase5189.database.windows.net"
+		},
+		"ls_azure_sql_properties_typeProperties_database": {
+			"value": "testdatabase"
+		},
+		"ls_azure_sql_properties_typeProperties_userName": {
+			"value": "Nalam"
+		},
+		"ls_http_dynamically_properties_typeProperties_url": {
+			"value": "@{linkedService().BaseURL}"
+		},
+		"ls_http_final_properties_typeProperties_url": {
+			"value": "@{linkedService().BaseURL}"
+		},
+		"ls_http_last_properties_typeProperties_url": {
+			"value": "@{linkedService().BaseURL}"
+		},
+		"ls_http_parameters_properties_typeProperties_url": {
+			"value": "@{linkedService().BaseURL}"
+		}
+	}
+}
